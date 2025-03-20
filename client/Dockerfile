@@ -6,19 +6,16 @@ COPY package.json package-lock.json ./
 
 # Skip canvas installation in CI environments
 ENV SKIP_CANVAS=1
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 
-# Install dependencies skipping optional dependencies like canvas
+# Install dependencies including devDependencies required for build
 RUN npm install --no-optional --legacy-peer-deps
-
-# Install Angular CLI for build
-RUN npm install -g @angular/cli@19.1.7
 
 # Copy application code
 COPY . .
 
-# Build the app
-RUN ng build --configuration production
+# Build the app using local Angular CLI
+RUN npm run build -- --configuration=production
 
 # Setup NGINX
 FROM nginx:alpine
