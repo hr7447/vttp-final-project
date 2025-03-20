@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Railway Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Railway Deployment Debug</h1>
+    
+    <h2>NGINX Configuration</h2>
+    <div id="nginx-info">Checking...</div>
+    
+    <h2>API Connection Test</h2>
+    <div id="api-test">Running test...</div>
+    
+    <script>
+        // Check API URL from header
+        function checkNginxConfig() {
+            fetch('/api/health', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            })
+            .then(response => {
+                document.getElementById('nginx-info').innerHTML = `
+                    <p>Headers from request:</p>
+                    <pre>${JSON.stringify(response.headers, null, 2)}</pre>
+                    <p class="success">API URL header found. NGINX configuration seems correct.</p>
+                `;
+            })
+            .catch(error => {
+                document.getElementById('nginx-info').innerHTML = `
+                    <p class="error">Error checking NGINX configuration: ${error.message}</p>
+                    <p>This suggests that your API URL is not correctly configured.</p>
+                `;
+            });
+        }
+        
+        // Test API connection
+        function testApiConnection() {
+            fetch('/api/public/health', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('api-test').innerHTML = `
+                    <p class="success">Successfully connected to API!</p>
+                    <pre>${data}</pre>
+                `;
+            })
+            .catch(error => {
+                document.getElementById('api-test').innerHTML = `
+                    <p class="error">Failed to connect to API: ${error.message}</p>
+                    <p>This suggests a problem with your backend service or API URL configuration.</p>
+                    <p>Check that:</p>
+                    <ul>
+                        <li>Your backend service is running</li>
+                        <li>The API_URL environment variable is correctly set</li>
+                        <li>Private networking is enabled in Railway</li>
+                    </ul>
+                `;
+            });
+        }
+        
+        // Run tests
+        window.onload = function() {
+            checkNginxConfig();
+            testApiConnection();
+        };
+    </script>
+</body>
+</html> 

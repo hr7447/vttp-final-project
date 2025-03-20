@@ -26,7 +26,10 @@
                 "input": "public"
               },
               "src/assets",
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/debug.html",
+              "src/config.js",
+              "src/railway-debug.html"
             ],
             "styles": [
               "src/styles.css"
