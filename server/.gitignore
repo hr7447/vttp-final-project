@@ -39,3 +39,10 @@ build/
 **/project_requirements.md
 **/specification.md
 **/task_description.md
+
+### Deployment Files ###
+RAILWAY_DEPLOYMENT.md
+local-usage-instructions.md
+railway-deployment-fix-debug.md
+railway-deployment-fix.md
+railway.json
