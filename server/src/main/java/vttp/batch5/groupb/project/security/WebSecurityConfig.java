@@ -91,12 +91,15 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Allow requests from the Angular app and Render domains
+        // Allow requests from the Angular app and Railway domains
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:4200",
             "https://taskmanager-web.onrender.com",
             "https://*.onrender.com",
-            "https://*.up.railway.app"
+            "https://*.up.railway.app",
+            "http://*.railway.app",
+            "https://*.railway.internal",
+            "http://*.railway.internal"
         ));
         
         // Allow all necessary HTTP methods
