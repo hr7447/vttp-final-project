@@ -10,6 +10,13 @@
         <h1>API Connection Test</h1>
         
         <div class="card mb-4">
+            <div class="card-header">Client Info</div>
+            <div class="card-body">
+                <div id="client-info"></div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
             <div class="card-header">API Configuration</div>
             <div class="card-body">
                 <div id="config-info"></div>
@@ -21,7 +28,8 @@
             <div class="card-header">Health Check</div>
             <div class="card-body">
                 <div id="health-result">Click the button to test the API health endpoint</div>
-                <button id="test-health" class="btn btn-success mt-3">Test Health Endpoint</button>
+                <button id="test-health" class="btn btn-success mt-3">Test Health Endpoint (no-cors)</button>
+                <button id="test-health-direct" class="btn btn-warning mt-3">Test Health Endpoint (direct)</button>
             </div>
         </div>
         
@@ -40,6 +48,16 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Display client info
+            const clientInfo = document.getElementById('client-info');
+            clientInfo.innerHTML = `
+                <p><strong>Page URL:</strong> ${window.location.href}</p>
+                <p><strong>Origin:</strong> ${window.location.origin}</p>
+                <p><strong>Host:</strong> ${window.location.host}</p>
+                <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
+                <p><strong>Time:</strong> ${new Date().toISOString()}</p>
+            `;
+            
             // Display configuration
             const apiUrl = window.env?.apiUrl || 'Not configured';
             document.getElementById('config-info').innerHTML = `
@@ -49,20 +67,73 @@
             // Test direct API connection
             document.getElementById('test-direct').addEventListener('click', function() {
                 const url = window.env?.apiUrl + '/public/health';
-                fetch(url)
-                    .then(response => response.text())
+                fetch(url, {
+                    mode: 'no-cors',
+                    headers: {
+                        'Origin': window.location.origin
+                    }
+                })
+                    .then(response => {
+                        if (response.type === 'opaque') {
+                            return 'Request sent successfully, but response is opaque due to CORS restrictions';
+                        }
+                        return response.text();
+                    })
                     .then(data => {
-                        alert(`Success! Response: ${data}`);
+                        alert(`Response: ${data}`);
                     })
                     .catch(error => {
                         alert(`Error: ${error.message}`);
                     });
             });
             
-            // Test health endpoint
+            // Test health endpoint with no-cors
             document.getElementById('test-health').addEventListener('click', function() {
-                fetch('https://server-production-e157.up.railway.app/api/public/health')
-                    .then(response => response.text())
+                fetch('https://server-production-e157.up.railway.app/api/public/health', {
+                    mode: 'no-cors',
+                    headers: {
+                        'Origin': window.location.origin
+                    }
+                })
+                    .then(response => {
+                        if (response.type === 'opaque') {
+                            return 'Request sent successfully, but response is opaque due to CORS restrictions';
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        document.getElementById('health-result').innerHTML = `
+                            <div class="alert alert-success">
+                                <p>Health check request sent!</p>
+                                <pre>${data}</pre>
+                            </div>
+                        `;
+                    })
+                    .catch(error => {
+                        document.getElementById('health-result').innerHTML = `
+                            <div class="alert alert-danger">
+                                <p>Health check failed: ${error.message}</p>
+                            </div>
+                        `;
+                    });
+            });
+            
+            // Test health endpoint with direct request
+            document.getElementById('test-health-direct').addEventListener('click', function() {
+                fetch('https://server-production-e157.up.railway.app/api/public/health', {
+                    // No 'no-cors' mode - make a direct request
+                    headers: {
+                        'Origin': window.location.origin
+                    }
+                })
+                    .then(response => {
+                        // Check if response was successful
+                        const status = response.status;
+                        if (!response.ok) {
+                            throw new Error(`HTTP status ${status}`);
+                        }
+                        return response.text();
+                    })
                     .then(data => {
                         document.getElementById('health-result').innerHTML = `
                             <div class="alert alert-success">
@@ -85,12 +156,22 @@
                 const url = document.getElementById('api-url').value;
                 document.getElementById('manual-result').innerHTML = `<div class="spinner-border" role="status"></div> Testing...`;
                 
-                fetch(url)
-                    .then(response => response.text())
+                fetch(url, {
+                    mode: 'no-cors',
+                    headers: {
+                        'Origin': window.location.origin
+                    }
+                })
+                    .then(response => {
+                        if (response.type === 'opaque') {
+                            return 'Request sent successfully, but response is opaque due to CORS restrictions';
+                        }
+                        return response.text();
+                    })
                     .then(data => {
                         document.getElementById('manual-result').innerHTML = `
                             <div class="alert alert-success">
-                                <p>Request successful!</p>
+                                <p>Request sent!</p>
                                 <pre>${data}</pre>
                             </div>
                         `;

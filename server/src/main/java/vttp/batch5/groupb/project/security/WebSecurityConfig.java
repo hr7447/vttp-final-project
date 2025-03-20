@@ -96,6 +96,7 @@ public class WebSecurityConfig {
             "http://localhost:4200",
             "https://taskmanager-web.onrender.com",
             "https://*.onrender.com",
+            "https://client-production-ac24.up.railway.app",
             "https://*.up.railway.app",
             "http://*.railway.app",
             "https://*.railway.internal",
