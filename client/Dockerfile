@@ -1,30 +1,36 @@
-FROM node:18.19-alpine AS build
+# Use Node.js LTS
+FROM node:18-alpine AS build
+
+# Set working directory
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json ./
+COPY package.json ./
 
-# Skip canvas installation in CI environments
-ENV SKIP_CANVAS=1
-ENV NODE_ENV=development
+# Install only production dependencies to make build faster
+RUN npm install --only=prod
+RUN npm install @angular/cli@19.1.7 @angular-devkit/build-angular@19.1.7
 
-# Install dependencies including devDependencies required for build
-RUN npm install --no-optional --legacy-peer-deps
-
-# Copy application code
+# Copy source code
 COPY . .
 
-# Build the app using local Angular CLI
-RUN npm run build -- --configuration=production
+# Build the Angular app for production
+RUN npx ng build
 
-# Setup NGINX
+# Use Nginx for serving the built app
 FROM nginx:alpine
+
+# Copy the built app from the build stage
 COPY --from=build /app/dist/client/browser /usr/share/nginx/html
+
+# Copy NGINX configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf.template
 
-# Set API URL environment variable
+# Environment variable for API URL (will be replaced at runtime)
 ENV API_URL="http://backend:8080/api/"
 
-# Template the nginx config and start nginx
+# Use envsubst to replace environment variables in nginx config
 CMD ["/bin/sh", "-c", "envsubst '$$API_URL' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+
+# Expose port 80
 EXPOSE 80 

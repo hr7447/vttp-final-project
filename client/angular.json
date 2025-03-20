@@ -26,8 +26,7 @@
                 "input": "public"
               },
               "src/assets",
-              "src/manifest.webmanifest",
-              "src/ngsw-config.json"
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.css"
@@ -48,8 +47,7 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all",
-              "serviceWorker": true
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,
