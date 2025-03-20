@@ -52,4 +52,11 @@ pnpm-debug.log*
 
 # System Files
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Railway Deployment
+railway.json
+RAILWAY_DEPLOYMENT.md
+local-usage-instructions.md
+railway-deployment-fix-debug.md
+railway-deployment-fix.md 
