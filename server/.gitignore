@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Instruction Files ###
+**/instructions.md
+**/requirements.txt
+**/assignment_details.md
+**/project_requirements.md
+**/specification.md
+**/task_description.md
