@@ -29,7 +29,8 @@
               "src/manifest.webmanifest",
               "src/debug.html",
               "src/config.js",
-              "src/railway-debug.html"
+              "src/railway-debug.html",
+              "src/api-test.html"
             ],
             "styles": [
               "src/styles.css"
