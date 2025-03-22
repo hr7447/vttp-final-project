@@ -32,7 +32,6 @@ public class JwtUtils {
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
         
-        // Create a secure key using the jwtSecret as a seed
         SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
         
         return Jwts.builder()

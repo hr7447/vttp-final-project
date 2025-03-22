@@ -36,7 +36,6 @@ public class MetricsController {
         );
     }
     
-    // Inner class for metrics summary
     public static class MetricsSummary {
         private double tasksCreated;
         private double tasksCompleted;

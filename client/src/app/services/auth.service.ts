@@ -5,7 +5,6 @@ import { JwtResponse, LoginRequest } from '../models/auth.model';
 import { User } from '../models/user.model';
 import { environment } from '../../environments/environment';
 
-// Fix the API URL to ensure it doesn't duplicate /api
 const AUTH_API = environment.apiUrl + '/auth';
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -44,7 +43,6 @@ export class AuthService {
   getToken(): string | null {
     const token = window.sessionStorage.getItem(TOKEN_KEY);
     console.log('Retrieved token from session storage: ' + (token ? 'Token exists' : 'No token'));
-    // Debug the token details
     if (token) {
       try {
         const tokenData = JSON.parse(atob(token.split('.')[1]));

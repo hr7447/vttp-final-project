@@ -33,7 +33,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         
-        // Skip authentication for public endpoints
         if (request.getRequestURI().startsWith("/api/public/") ||
             request.getRequestURI().startsWith("/api/auth/") ||
             request.getRequestURI().equals("/api/quotes/random")) {

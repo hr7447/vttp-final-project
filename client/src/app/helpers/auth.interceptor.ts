@@ -8,7 +8,6 @@ export const authInterceptorFn: HttpInterceptorFn = (req, next) => {
   
   console.log(`Intercepting request to ${req.url}`);
   
-  // Skip auth header for CORS preflight requests
   if (req.method === 'OPTIONS') {
     console.log('Skipping auth header for CORS preflight request');
     return next(req);
@@ -16,11 +15,9 @@ export const authInterceptorFn: HttpInterceptorFn = (req, next) => {
   
   if (token) {
     console.log(`Adding token to request: ${req.url}`);
-    // Clone the request and add the authorization header while preserving existing headers
     const cloned = req.clone({
       headers: req.headers
         .set('Authorization', `Bearer ${token}`)
-        // Ensure CORS headers are sent properly
         .set('X-Requested-With', 'XMLHttpRequest')
     });
     return next(cloned);
